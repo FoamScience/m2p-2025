@@ -1,0 +1,63 @@
+name: Deploy presentation to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Tmate debugging session'
+        required: false
+        default: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+        with:
+          detached: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        working-directory: slidev
+        run: npm ci
+
+      - name: Build Slidev site
+        working-directory: slidev
+        run: |
+          REFERENCES_BIB=references.bib REFERENCES_STYLE=apa npm run references
+          npm run build
+
+      - name: Export Slidev PDF
+        working-directory: slidev
+        run: |
+          sed -i '/^\s*base:\s*/d' vite.config.ts
+          cat vite.config.ts
+          # we'd like --with-toc but this buggy on GAs
+          npx slidev export --format pdf --with-toc --with-clicks || (
+            echo "Failed with TOC and clicks, retrying without..."
+            npx slidev export --format pdf
+          )
+          mv m2p-2025.pdf dist/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: slidev/dist
