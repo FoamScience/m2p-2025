@@ -1,0 +1,1 @@
+- `--no-geo-features` option for stage 1
