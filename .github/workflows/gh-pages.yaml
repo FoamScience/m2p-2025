@@ -35,17 +35,14 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        working-directory: slidev
-        run: npm ci
+        run: npm i
 
       - name: Build Slidev site
-        working-directory: slidev
         run: |
           REFERENCES_BIB=references.bib REFERENCES_STYLE=apa npm run references
           npm run build
 
       - name: Export Slidev PDF
-        working-directory: slidev
         run: |
           sed -i '/^\s*base:\s*/d' vite.config.ts
           cat vite.config.ts
@@ -60,4 +57,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: slidev/dist
+          publish_dir: dist

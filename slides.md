@@ -34,7 +34,7 @@ themeConfig:
   date: June 2025
 seoMeta:
   ogImage: "https://foamscience.github.io/m2p-2025/images/thumbnail.png"
-  ogUrl: "https://foamscience.github.io/slidev-template"
+  ogUrl: "https://foamscience.github.io/m2p-2025"
   twitterImage: "https://foamscience.github.io/m2p-2025/images/thumbnail.png"
 download: https://foamscience.github.io/m2p-2025/m2p-2025.pdf
 addons:
@@ -86,7 +86,7 @@ hideInToc: true
 
 # Thank you for your attention
 
-[GitHub](https://github.com/FoamScience/slidev-template) · [More stuff like this](https://github.com/FoamScience)
+[GitHub](https://github.com/FoamScience/m2p-2025) · [More stuff like this](https://github.com/FoamScience)
 
 ---
 transition: fade-in
